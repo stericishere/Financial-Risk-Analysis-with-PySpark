@@ -1,0 +1,56 @@
+{
+  "input": {
+    "data_path": "data/Financial_Risk_Dataset.csv",
+    "format": "csv",
+    "options": {
+      "header": true,
+      "inferSchema": true,
+      "sep": ","
+    }
+  },
+  "output": {
+    "path": "reports/financial_risk_analysis",
+    "format": "parquet",
+    "mode": "overwrite",
+    "partitionBy": ["risk_category"]
+  },
+      "processing": {
+        "risk_thresholds": {
+            "low_risk": 0.3,
+            "medium_risk": 0.6,
+            "high_risk": 0.8
+        },
+        "approval_config": {
+            "approve_threshold": 0.3,
+            "reject_threshold": 0.7,
+            "min_confidence": 0.8
+        },
+    "feature_columns": [
+      "Age",
+      "Income",
+      "LoanAmount",
+      "CreditScore",
+      "MonthsEmployed",
+      "NumCreditLines",
+      "InterestRate",
+      "LoanTerm",
+      "DTIRatio"
+    ],
+    "target_column": "Default",
+    "aggregation_levels": ["risk_category", "age_group", "income_bracket"]
+  },
+  "spark": {
+    "app_name": "FinancialRiskETL",
+    "master": "local[*]",
+    "config": {
+      "spark.sql.adaptive.enabled": "true",
+      "spark.sql.adaptive.coalescePartitions.enabled": "true",
+      "spark.sql.execution.arrow.pyspark.enabled": "true",
+      "spark.serializer": "org.apache.spark.serializer.KryoSerializer"
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  }
+} 
